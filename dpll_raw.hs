@@ -17,17 +17,19 @@ dpll e v
     | e == [] = v   
     -- UNSAT
     | elem [] e = []    
-    -- Test unit propagation
-    | length units /= 0 = dpll (propagate usym e) (v ++ [usym])
+    -- Unit propagate if there are unit clauses
+    | units /= [] = dpll (propagate unitLit e) (v ++ [unitLit])
     -- Propagate the first symbol
-    | otherwise = dpll (propagate sym e) (v ++ [sym]) >||< dpll (propagate (-sym) e) (v ++ [(-sym)])
+    | otherwise = dpll (propagate lit e) (v ++ [lit]) >||<
+                  dpll (propagate (-lit) e) (v ++ [(-lit)])
+
         where
             -- Get the unit clauses
             units = filter (\x -> (length x) == 1) e
             -- Get the symbol for unit propagation, only invoked if units is non-empty
-            usym = head $ head units
+            unitLit = head $ head units
             -- Get the first symbol
-            sym = head $ head e
+            lit = head $ head e
             -- Propagation helper: first delete clauses then remove opposite polarity
             propagate n e = map (\\ [-n]) $ filter (notElem n) e
             -- Acts like || 
