@@ -1,0 +1,13 @@
+*.aux
+*.toc
+*.gz
+*.log
+*.out
+*.bbl
+*.blg
+*.idx
+*.ilg
+*.ind
+*.lof
+*.lot
+_minted-main/
