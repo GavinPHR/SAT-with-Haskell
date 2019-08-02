@@ -3,9 +3,7 @@ import DPLL
 import Grid
 import Data.List (sort)
 
-solve'' :: Grid -> Valuation (Int, Int, Int)
-solve'' g =  dpll (enc g) []
-
+main = solve exampleGrid
 
 solve' :: Grid -> Valuation (Int, Int, Int)
 solve' g = sort [n | n <- dpll (enc g) [], isPos n]

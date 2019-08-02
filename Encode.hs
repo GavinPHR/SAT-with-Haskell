@@ -18,7 +18,6 @@ prefilled g = [[P (i, j, n)] |
 
 -- Below encoding stays the same for all grids
 
-
 atLeastOne = [[P (i, j, n) | n <- [1..9]] | i <- [1..9], j <- [1..9]] -- Cells
           ++ [[P (i, j, n) | j <- [1..9]] | i <- [1..9], n <- [1..9]] -- Rows
           ++ [[P (i, j, n) | i <- [1..9]] | j <- [1..9], n <- [1..9]] -- Columns
