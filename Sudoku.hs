@@ -1,4 +1,4 @@
-import Encode hiding (CNF)
+import Encode
 import DPLL
 import Grid
 import Data.List (sort)

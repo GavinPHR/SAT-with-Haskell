@@ -1,5 +1,5 @@
 module Encode where
-import Data.List
+import Data.List (tails)
 import Grid
 import DPLL (Literal (..), CNF (..), neg)
 
@@ -17,12 +17,13 @@ prefilled g = [[P (i, j, n)] |
                n /= 0]
 
 -- Below encoding stays the same for all grids
-
+atLeastOne :: CNF (Int, Int, Int)
 atLeastOne = [[P (i, j, n) | n <- [1..9]] | i <- [1..9], j <- [1..9]] -- Cells
           ++ [[P (i, j, n) | j <- [1..9]] | i <- [1..9], n <- [1..9]] -- Rows
           ++ [[P (i, j, n) | i <- [1..9]] | j <- [1..9], n <- [1..9]] -- Columns
           ++ [[P (i, j, n) | i <- [ii..ii + 2], j <- [jj..jj + 2]] | 
               ii <- [1,4,7], jj <- [1,4,7], n <- [1..9]] -- Blocks
 
+noMoreThanOne :: CNF (Int, Int, Int)
 noMoreThanOne = [[neg x, neg y] | row <- atLeastOne, (x:xs) <- tails row, y <- xs]
  
