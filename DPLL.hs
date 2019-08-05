@@ -1,14 +1,15 @@
 module DPLL where
-import Data.List
+import Data.List ((\\))
 
 data Literal a = P a | N a deriving (Eq, Show, Ord)
-type CNF a = [[Literal a]]
+type Clause a = [Literal a]
+type CNF a = [Clause a]
 type Valuation a = [Literal a]
 
 -- Negates a literal
 neg :: Literal a -> Literal a
-neg (P var) = N var
-neg (N var) = P var
+neg (P atom) = N atom
+neg (N atom) = P atom
 
 -- Input a CNF and a partial valuation, output a valuation if SAT otherwise []
 dpll :: Eq a => CNF a -> Valuation a -> Valuation a
@@ -20,7 +21,8 @@ dpll e v
     -- Unit propagate if there are unit clauses
     | units /= [] = dpll (propagate unitLit e) (v ++ [unitLit])
     -- Propagate the first literal
-    | otherwise = dpll (propagate lit e) (v ++ [lit]) >||< dpll (propagate (neg lit) e) (v ++ [(neg lit)])
+    | otherwise = dpll (propagate lit e) (v ++ [lit]) 
+             >||< dpll (propagate (neg lit) e) (v ++ [(neg lit)])
         where
             -- Get the unit clauses
             units = filter (\x -> (length x) == 1) e
@@ -32,14 +34,15 @@ dpll e v
             propagate n e = map (\\ [neg n]) $ filter (notElem n) e
             -- Acts like || 
             (>||<) x y = if x /= [] then x else y
+ 
 
 -- Example CNF
-e :: CNF Int
-e = [[N 1, P 2, P 3],
-     [P 1, P 3, P 4],
-     [P 1, P 3, N 4],
-     [P 1, N 3, P 4],
-     [P 1, N 3, P 4],
-     [N 2, N 3, P 4],
-     [N 1, P 2, N 3],
-     [N 1, N 2, P 3]]
+e :: CNF Char
+e = [[N 'A', P 'B', P 'C'],
+     [P 'A', P 'C', P 'D'],
+     [P 'A', P 'C', N 'D'],
+     [P 'A', N 'C', P 'D'],
+     [P 'A', N 'C', N 'D'],
+     [N 'B', N 'C', P 'D'],
+     [N 'A', P 'B', N 'C'],
+     [N 'A', N 'B', P 'C']]
