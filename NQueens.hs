@@ -25,14 +25,27 @@ rowAndCOl n = let
                 noMoreThanOne = [[neg x, neg y] | row <- atLeastOne, (x:xs) <- tails row, y <- xs]
               in 
                 noMoreThanOne ++ atLeastOne 
-                
+
 noSameDiag :: Int -> CNF (Int, Int)
-noSameDiag n = [[N (d+j,j), N (d+k,k)] | 
-                d <- [0..(n-2)], j <- [1..(n-d)], k <- [(j+1)..(n-2)]]
-            ++ [[N (j,j-d), N (k,k-d)] | 
-                d <- [(-(n-2))..(-1)], j <- [1..(n+d)], k <- [(j+1)..(n+d)]]
-            ++ [[N (j,d-j), N (k,d-k)] | 
-                d <- [3..(n+1)], j <- [1..(d-1)], k <- [(j+1)..(d-1)]]
-            ++ [[N (j,d-j), N (k,d-k)] | 
-                d <- [(n+2)..(2*n-1)], j <- [(d-n)..n], k <- [(j+1)..(d-1)]]
-            
+noSameDiag n = [[N (d+j,j),N (d+k,k)] | d<-[0..(n-2)],j<-[1..(n-d)],k<-[(j+1)..(n-d)]]
+            ++ [[N (j,j-d),N (k,k-d)] | d<-[(2-n)..(-1)],j<-[1..(n+d)],k<-[(j+1)..(n+d)]]
+            ++ [[N (j,d-j),N (k,d-k)] | d<-[3..(n+1)],j<-[1..(d-1)],k<-[(j+1)..(d-1)]]
+            ++ [[N (j,d-j),N (k,d-k)] | d<-[(n+2)..(2*n-1)],j<-[(d-n)..n],k<-[(j+1)..n]]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
