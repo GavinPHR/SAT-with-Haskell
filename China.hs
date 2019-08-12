@@ -9,7 +9,7 @@ solve = sort [n | n <- dpll encode [], isPos n]
            isPos (N _) = False
 
 encode :: CNF (Province, Colour)
-encode = noSameNeighbour ++ noMoreThanOne ++ atLeastOne
+encode = seaAndLand ++ noSameNeighbour ++ noMoreThanOne ++ atLeastOne
 
 atLeastOne :: CNF (Province, Colour)
 atLeastOne = [[P (p, c) | c <- colours] | p <- provinces]
@@ -20,18 +20,22 @@ noMoreThanOne = [[neg x, neg y] | row <- atLeastOne, (x:xs) <- tails row, y <- x
 noSameNeighbour :: CNF (Province, Colour)
 noSameNeighbour = [[N (p,c), N (ngh,c)] | (p,nghs) <- neighbours, ngh <- nghs, c <- colours]
 
+seaAndLand :: CNF (Province, Colour)
+seaAndLand = [[P (Sea, Blue)], [P (Land, Yellow)]]
+
 data Colour = Red | Green | Blue | Yellow deriving (Eq, Ord, Show)
 
 colours :: [Colour]
 colours = [Red, Green, Blue, Yellow]
 
-data Province = Anhui        | Beijing  | Chongqing | Fujian  | Gansu    |
-                Guangdong    | Guangxi  | Guizhou   | Hainan  | Hebei    | 
-                Heilongjiang | Henan    | Hongkong  | Hubei   | Hunan    | 
-                IMongolia    | Jiangsu  | Jiangxi   | Jilin   | Liaoning |
-                Macau        | Ningxia  | Qinghai   | Shaanxi | Shandong | 
-                Shanghai     | Shanxi   | Sichuan   | Taiwan  | Tianjin  |
-                Tibet        | Xinjiang | Yunnan    | Zhejiang deriving (Eq, Ord, Show)
+data Province = Anhui        | Beijing  | Chongqing | Fujian   | Gansu    |
+                Guangdong    | Guangxi  | Guizhou   | Hainan   | Hebei    | 
+                Heilongjiang | Henan    | Hongkong  | Hubei    | Hunan    | 
+                IMongolia    | Jiangsu  | Jiangxi   | Jilin    | Liaoning |
+                Macau        | Ningxia  | Qinghai   | Shaanxi  | Shandong | 
+                Shanghai     | Shanxi   | Sichuan   | Taiwan   | Tianjin  |
+                Tibet        | Xinjiang | Yunnan    | Zhejiang | 
+                Sea | Land deriving (Eq, Ord, Show)
 
 provinces :: [Province]
 provinces = [Anhui, Beijing, Chongqing, Fujian, Gansu,
@@ -51,7 +55,7 @@ neighbours = [(Anhui,[Shandong,Jiangsu,Zhejiang,Jiangxi,Hubei,Henan]),
               (Guangdong,[Guangxi,Hunan,Jiangxi,Fujian,Hongkong,Macau]),
               (Guangxi,[Yunnan,Guizhou,Hunan,Guangdong]),
               (Guizhou,[Chongqing,Hunan,Guangxi,Yunnan,Sichuan]),
-              (Hainan,[]),
+              (Hainan,[Sea]),
               (Hebei,[IMongolia,Liaoning,Beijing,Tianjin,Shandong,Henan,Shanxi]),
               (Heilongjiang,[IMongolia,Jilin]),
               (Henan,[Hebei,Shandong,Anhui,Hubei,Shaanxi,Shanxi]),
@@ -71,11 +75,13 @@ neighbours = [(Anhui,[Shandong,Jiangsu,Zhejiang,Jiangxi,Hubei,Henan]),
               (Shanghai,[Jiangsu,Zhejiang]),
               (Shanxi,[IMongolia,Hebei,Henan,Shaanxi]),
               (Sichuan,[Gansu,Shaanxi,Chongqing,Guizhou,Yunnan,Tibet,Qinghai]),
-              (Taiwan,[]),
+              (Taiwan,[Sea]),
               (Tianjin,[Beijing,Hebei]),
               (Tibet,[Xinjiang,Qinghai,Sichuan,Yunnan]),
               (Xinjiang,[Tibet,Qinghai,Gansu]),
               (Yunnan,[Tibet,Sichuan,Guizhou,Guangxi]),
-              (Zhejiang,[Shanghai,Jiangsu,Anhui,Jiangxi,Fujian])]
+              (Zhejiang,[Shanghai,Jiangsu,Anhui,Jiangxi,Fujian]),
+              (Sea,[Liaoning,Hebei,Tianjin,Shandong,Jiangsu,Shanghai,Zhejiang,Fujian,Taiwan,Guangdong,Hongkong,Macau,Hainan,Guangxi]),
+              (Land,[Yunnan,Tibet,Xinjiang,Gansu,IMongolia,Heilongjiang,Jilin,Liaoning])]
 
 
